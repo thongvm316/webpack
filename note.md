@@ -1,1 +1,1 @@
-Task tmr: Read documentation: https://webpack.js.org/guides/asset-modules/
+Task tmr: Read documentation: Webpack Loaders
