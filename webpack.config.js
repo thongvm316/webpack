@@ -1,4 +1,5 @@
 const path = require('path')
+const TerserPlugin = require('terser-webpack-plugin')
 
 // Asset resource
 // module.exports = {
@@ -68,6 +69,22 @@ module.exports = {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'], // Loaders
       },
+      {
+        test: /\.scss$/,
+        use: ['style-loader', 'css-loader', 'sass-loader'], // Loaders
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/env'],
+            plugins: ['@babel/plugin-proposal-class-properties'],
+          },
+        },
+      },
     ],
   },
+  plugins: [new TerserPlugin()], // minimize of bundle.js
 }
