@@ -1,6 +1,8 @@
 const path = require('path')
 const TerserPlugin = require('terser-webpack-plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 // Asset resource
 // module.exports = {
@@ -98,9 +100,9 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 module.exports = {
   entry: './src/index.js',
   output: {
-    filename: 'bundle.js',
+    filename: 'bundle.[contenthash].js', // [contenthash] create new file with new name when code changes, use in the cases that we need for bw catching
     path: path.resolve(__dirname, './dist'),
-    publicPath: 'dist/', // show path when render to UI
+    publicPath: '', // show path when render to UI, '' will remove prefix when generator index.html in dist folder
   },
   mode: 'none',
   module: {
@@ -140,7 +142,20 @@ module.exports = {
     ],
   },
   plugins: [
-    new TerserPlugin(),
-    new MiniCssExtractPlugin({ filename: 'styles.css' }),
-  ], // TerserPlugin: minimize of bundle.js, MiniCssExtractPlugin ???
+    new TerserPlugin(), // TerserPlugin: minimize of bundle.js
+    new MiniCssExtractPlugin({ filename: 'styles.[contenthash].css' }),
+    new CleanWebpackPlugin({
+      cleanOnceBeforeBuildPatterns: [
+        '**/*',
+        path.join(process.cwd(), 'build/**/*'),
+      ], // '**/*' this means, it will remove all file according sub folder, no matter how nested are (dist), path.join(process.cwd(), 'build/**/*') remove all file in build folder and no matter nested are (build)
+    }), // clear old version before genergate new for bw catching, note: if there is no argument parameter pass into this fn, it just remove files store in dist folder
+    new HtmlWebpackPlugin({
+      title: 'Hello World',
+      filename: 'subfolder/custom_filename.html',
+      meta: {
+        description: 'Some description',
+      },
+    }), // Continues with bw catching, this will generator new html when new version of js and css would create, if have no argument parameter it will generator index.html, otherwise it will generator according argument be pass
+  ],
 }
