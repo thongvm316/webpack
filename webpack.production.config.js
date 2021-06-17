@@ -1,5 +1,5 @@
 const path = require('path')
-const TerserPlugin = require('terser-webpack-plugin')
+// const TerserPlugin = require('terser-webpack-plugin') --> auto import in production mode
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
@@ -12,7 +12,7 @@ module.exports = {
     path: path.resolve(__dirname, './dist'),
     publicPath: '', // show path when render to UI, '' will remove prefix when generator index.html in dist folder
   },
-  mode: 'development',
+  mode: 'production',
   module: {
     rules: [
       {
@@ -54,7 +54,7 @@ module.exports = {
     ],
   },
   plugins: [
-    new TerserPlugin(), // TerserPlugin: minimize of bundle.js
+    // new TerserPlugin(), // TerserPlugin: minimize of bundle.js --> cant remove cuz, in production mode it be use by default
     new MiniCssExtractPlugin({ filename: 'styles.[contenthash].css' }),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: [
