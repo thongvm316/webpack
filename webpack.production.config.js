@@ -1,21 +1,27 @@
 const path = require('path')
 // const TerserPlugin = require('terser-webpack-plugin') --> auto import in production mode
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const {
+  CleanWebpackPlugin
+} = require('clean-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 // Use MiniCssExtractPlugin instead style-loader
 module.exports = {
-  entry: './src/index.js',
+  // entry: './src/index.js',
+  entry: {
+    'hello-world': './src/hello-world.js',
+    'kiwi': './src/kiwi.js',
+  },
   output: {
-    filename: 'bundle.[contenthash].js', // [contenthash] create new file with new name when code changes, use in the cases that we need for bw catching
+    // filename: 'bundle.[contenthash].js', // [contenthash] create new file with new name when code changes, use in the cases that we need for bw catching
+    filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, './dist'),
     publicPath: '', // show path when render to UI, '' will remove prefix when generator index.html in dist folder
   },
   mode: 'production',
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.(png|jpg)$/,
         type: 'asset',
         parser: {
@@ -54,8 +60,11 @@ module.exports = {
     ],
   },
   plugins: [
-    // new TerserPlugin(), // TerserPlugin: minimize of bundle.js --> cant remove cuz, in production mode it be use by default
-    new MiniCssExtractPlugin({ filename: 'styles.[contenthash].css' }),
+    // new TerserPlugin(), // TerserPlugin: minimize of bundle.js --> can remove cuz, in production mode it be use by default
+    new MiniCssExtractPlugin({
+      // filename: 'styles.[contenthash].css',
+      filename: '[name].[contenthash].css'
+    }),
     new CleanWebpackPlugin({
       cleanOnceBeforeBuildPatterns: [
         '**/*',
@@ -63,10 +72,22 @@ module.exports = {
       ], // '**/*' this means, it will remove all file according subfolder, no matter how nested are (dist), path.join(process.cwd(), 'build/**/*') remove all file in build folder and no matter nested are (build)
     }), // clear old version before genergate new for bw catching, note: if there is no argument parameter pass into this fn, it just remove files store in dist folder
     new HtmlWebpackPlugin({
+      filename: 'hello-world.html',
       title: 'Hello World',
-      template: 'src/index.hbs', // use template engine
+      chunks: ['hello-world'],
+      template: 'src/page-template.hbs', // use template engine
       // filename: 'subfolder/custom_filename.html', // custom where and name of file would generate, if nok wp create html file into dist
-      description: 'Some description',
+      description: 'Hello World',
+      minify: false,
+
     }), // Continues with bw catching, this will generator new file html when new version of js and css would create, if have no argument parameter it will generator index.html, otherwise it will generator according argument be pass
+    new HtmlWebpackPlugin({
+      filename: 'kiwi.html',
+      title: 'Kiwi',
+      chunks: ['kiwi'],
+      template: 'src/page-template.hbs',
+      description: 'Kiwi',
+      minify: false,
+    })
   ],
 }
