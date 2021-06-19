@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 // Use MiniCssExtractPlugin instead style-loader
 module.exports = {
-  entry: './src/index.js',
+  entry: './src/kiwi.js',
   output: {
     filename: 'bundle.js', // [contenthash] create new file with new name when code changes, use in the cases that we need for bw catching
     path: path.resolve(__dirname, './dist'),
@@ -70,9 +70,10 @@ module.exports = {
     }), // clear old version before genergate new for bw catching, note: if there is no argument parameter pass into this fn, it just remove files store in dist folder
     new HtmlWebpackPlugin({
       title: 'Hello World',
-      template: 'src/index.hbs', // use template engine
+      template: 'src/page-template.hbs', // use template engine
       // filename: 'subfolder/custom_filename.html', // custom where and name of file would generate, if nok wp create html file into dist
       description: 'Some description',
+      minify: false,
     }), // Continues with bw catching, this will generator new file html when new version of js and css would create, if have no argument parameter it will generator index.html, otherwise it will generator according argument be pass
   ],
 }

@@ -1,9 +1,13 @@
 import HelloWorldButton from './components/hello-world-button/hello-world-button.js'
 import Heading from './components/heading/heading'
 import addImage from './add-image'
+// import _ from 'lodash'
+import React from 'react'
 
 const heading = new Heading()
-heading.render()
+// heading.render(_.upperFirst('hello World'))
+heading.render('Hello World')
+
 const helloWorldButton = new HelloWorldButton()
 helloWorldButton.render()
 // addImage()
